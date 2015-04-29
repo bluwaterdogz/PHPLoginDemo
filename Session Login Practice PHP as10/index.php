@@ -1,5 +1,5 @@
-<?php include_once("databaseConnection.php"); ?>
 <?php include_once("session.php"); ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,11 +23,11 @@
 <?php 
 
 	//Create table of Log history using query
-	$results = $conn->query("SELECT UserID, DateTime, INET_NTOA(IP) as IP, EventType from \"$eventTableName\" ORDER BY DateTime");
+	$results = $conn->query("SELECT UserID, DateTime, INET_NTOA(IP) as IP, EventType from AuthLogEntry ORDER BY DateTime");
 
  	while($row = $results->fetch_array(MYSQLI_ASSOC)){
 
-	$results2 = $conn->query("SELECT Username from \"$tableName\" WHERE UserID = \"".$row["UserID"]."\" limit 1")->fetch_array(MYSQLI_ASSOC);
+	$results2 = $conn->query("SELECT Username from USER WHERE UserID = \"".$row["UserID"]."\" limit 1")->fetch_array(MYSQLI_ASSOC);
 
 	?>
 	<tr><td><?=$row["DateTime"]?></td>

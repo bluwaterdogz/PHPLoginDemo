@@ -1,4 +1,12 @@
 <?php 
+	// make connection
+
+	$dbHost ="localhost";
+	$dbUser ="bmvelasquez";
+	$dbPass ="E1r509YQPmqEHAsM";
+	$dbName ="bmvelasquez";
+	
+	$conn = new mysqli($dbHost, $dbUser, $dbPass, $dbName);
 
 	// Register new user
 	if( isset($_POST['register']) ){
@@ -15,22 +23,17 @@
 					$ip = $_SERVER['REMOTE_ADDR'];
 					$eventType = 'create';
 
-
-
-					$stmt = $conn->prepare("INSERT INTO \"$tableName\" (Username, Password) VALUES (?,?)");
+					$stmt = $conn->prepare("INSERT INTO USER (Username, Password) VALUES (?,?)");
 					$stmt->bind_param( 'ss' , $newUsername, $hashed);
 					$stmt->execute();
 					$stmt->close();	
 
-					$query2 = "SELECT UserID FROM \"$tableName\" WHERE Username = \"$newUsername\"";
+					$query2 = "SELECT UserID FROM USER WHERE Username = \"$newUsername\"";
 					$result = $conn->query($query2);
 					$row = $result->fetch_array(MYSQLI_ASSOC);
 					$userID = $row['UserID'];
 
-
-
-					// fore retreiving user login data
-					$stmt = $conn->prepare("INSERT INTO \"$eventTableName\" (IP, EventType, UserID) VALUES (INET_ATON(?),?,?)");
+					$stmt = $conn->prepare("INSERT INTO AuthLogEntry (IP, EventType, UserID) VALUES (INET_ATON(?),?,?)");
 					$stmt->bind_param( 'sss' , $ip, $eventType, $userID);
 					$stmt->execute();
 					$stmt->close();	
@@ -53,7 +56,7 @@
 		$loginUsername = htmlspecialchars($_POST["loginusername"]);
 		$loginPassword = htmlspecialchars($_POST["loginpassword"]);
 
-		$results = $conn->query("SELECT Password, UserID from \"$tableName\" WHERE Username = \"$loginUsername\"")->fetch_array(MYSQLI_ASSOC);
+		$results = $conn->query("SELECT Password, UserID from USER WHERE Username = \"$loginUsername\"")->fetch_array(MYSQLI_ASSOC);
 		$retrievedHashed = $results["Password"];
 		$queriedLoginID = $results["UserID"];
 
@@ -83,7 +86,7 @@
 			$ip = $_SERVER['REMOTE_ADDR']; 
 			$eventTypeLogin = "login";
 
-			$stmt = $conn->prepare("INSERT into \"$eventTableName\"(IP, UserID, EventType ) VALUES (INET_ATON(?) , ? , ?)");
+			$stmt = $conn->prepare("INSERT into AuthLogEntry (IP, UserID, EventType ) VALUES (INET_ATON(?) , ? , ?)");
 				$stmt->bind_param('sss', $ip, $queriedLoginID , $eventTypeLogin);
 				$stmt->execute();
 				$stmt->close();
@@ -94,7 +97,7 @@
 	if(isset($_POST['logout'])){
 		// Query UserID for AuthLogEntry table $_SESSION["username"]
 		session_start();
-		$query3 = "SELECT UserID from \"$tableName\" WHERE Username =\"".$_SESSION["username"]."\"";
+		$query3 = "SELECT UserID from USER WHERE Username =\"".$_SESSION["username"]."\"";
 		$results3 = $conn->query($query3)->fetch_array(MYSQLI_ASSOC);
 		$queriedLogoutID = $results3["UserID"];
 
@@ -102,7 +105,7 @@
 		$eventTypeLogout = "logout";
 
 		// Insert UserID into AuthLogEntry table
-		$stmt = $conn->prepare("INSERT into \"$eventTableName\" (IP, UserID, EventType ) VALUES (INET_ATON(?) , ? , ?)");
+		$stmt = $conn->prepare("INSERT into AuthLogEntry (IP, UserID, EventType ) VALUES (INET_ATON(?) , ? , ?)");
 			$stmt->bind_param('sss', $ip, $queriedLogoutID , $eventTypeLogout);
 			$stmt->execute();
 			$stmt->close();
