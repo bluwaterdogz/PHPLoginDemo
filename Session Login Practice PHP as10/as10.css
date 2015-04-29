@@ -1,0 +1,81 @@
+header {
+  color: #444444;
+  background-color: #eeeeff;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+form {
+  display: inline;
+}
+
+#newpostform {
+  padding: 10px;
+}
+
+article {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px dashed;
+}
+
+article:hover {
+  background-color: yellow;
+}
+
+#leftheader {
+  float: left;
+
+}
+#rightheader {
+  float: right;
+
+}
+
+fieldset {
+  border: none;
+  margin: 0 0 10px 0;
+}
+
+label {
+  font-family:Verdana, Geneva, sans-serif;
+  font-weight:bold;
+  color: #666;
+  color: rgba(0, 0, 0, 0.6);
+  text-shadow: 0 1px 1px #fff;
+}
+
+fieldset:last-child {
+  margin: 0;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+th {
+  background-color: white;
+  border: 1px solid;
+}
+
+
+td {
+  border: 1px solid;
+  padding: 5px;
+}
+
+tr:nth-child(even) {
+  background-color: #F5F5F5;
+}
+
+tr:nth-child(odd) {
+  background-color: #FFFFF0;
+}
+
+tr:hover {
+  background-color: yellow;
+}
+
+#newuserform input {
+  display: block;
+}
